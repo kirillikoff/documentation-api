@@ -202,8 +202,10 @@ components:
         code:
           type: integer
           format: int32
+          description: Код ошибки
         message:
           type: string
+          description: Описание ошибки
 
   responses:
     UserListSuccess:
@@ -244,35 +246,35 @@ components:
             $ref: '#/components/schemas/error'
 
     UserNotFound:
-      description: ""
+      description: Не найдено
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/error'
 
     Unauthorized:
-      description: ""
+      description: Ошибка авторизации
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/error'
 
     BadRequest:
-      description: ""
+      description: Неправильный запрос
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/error'
 
     ServerError:
-      description: ""
+      description: Внутренняя ошибка сервера
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/error'
 
     UnprocessableEntity:
-      description: ""
+      description: Ошибка обработки данных
       content:
         application/json:
           schema:
