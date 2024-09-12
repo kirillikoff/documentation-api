@@ -1,0 +1,2823 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Name
+    contact:
+        email: 
+    version: 2.1.0
+servers:
+    - url: https://kl.com
+paths:
+    /v2/addons:
+        get:
+            tags:
+                - AddonService
+            description: Получение списка доступных плагинов.
+            operationId: AddonService_ListAddons
+            parameters:
+                - name: limit
+                  in: query
+                  description: Количество плагинов в ответе.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: offset
+                  in: query
+                  description: Плагин, с которого начинается выборка.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: sort
+                  in: query
+                  description: |-
+                    Параметры сортировки списка плагинов.
+                     Имеют вид "field direction".
+                     Возможные значения для field: name, createdAt.
+                     Возможные значения для direction: asc, desc.
+                  schema:
+                    type: string
+                - name: filters
+                  in: query
+                  description: |-
+                    Параметры фильтрации списка плагинов.
+                     Имеют вид  "field condition value" или "field:value"(include).
+                     Возможные значения для field: name.
+                     Возможные значения для condition: =, :.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAddonsResponse'
+    /v2/addons/{addonName}:
+        get:
+            tags:
+                - AddonService
+            description: Получение списка версий плагина.
+            operationId: AddonService_ListAddonReleases
+            parameters:
+                - name: addonName
+                  in: path
+                  description: Название плагина.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAddonReleasesResponse'
+    /v2/availability:
+        get:
+            tags:
+                - AvailabilityService
+            description: Получение списка доступных зон и шаблонов конфигураций виртуальных машин.
+            operationId: AvailabilityService_ListAvailableZonesWithFlavors
+            parameters:
+                - name: projectId
+                  in: query
+                  description: Идентификатор проекта.
+                  schema:
+                    type: string
+                - name: cpu
+                  in: query
+                  description: |-
+                    Количество ядер виртуального процессора.
+                     Опциональное поле. Если указано, возвращаемые шаблоны конфигураций будут с таким CPU.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: ram
+                  in: query
+                  description: |-
+                    Оперативная память в ГБ.
+                     Опциональное поле. Если указано, возвращаемые шаблоны конфигураций будут с таким RAM.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: oversubscription
+                  in: query
+                  description: "Коэффициент переподписки.\n Опциональное поле. \n Если указано, будут возвращены шаблоны конфигураций с этим коэффициентом переподписки."
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAvailableZonesWithFlavorsResponse'
+    /v2/billing/calculate-price:
+        post:
+            tags:
+                - BillingService
+            description: Получение расчета по предоставленным услугам.
+            operationId: BillingService_CalculatePrice
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CalculatePriceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CalculatePriceResponse'
+    /v2/clusters:
+        get:
+            tags:
+                - ClusterService
+            description: Получение списка кластеров.
+            operationId: ClusterService_List
+            parameters:
+                - name: limit
+                  in: query
+                  description: Количество кластеров в ответе.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: offset
+                  in: query
+                  description: Количество пропущенных кластеров.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: sort
+                  in: query
+                  description: |-
+                    Сортировка списка кластеров в виде "field direction".
+                     Возможные значения для field: displayName, masterCount, nodePoolCount, createdAt.
+                     Возможные значения для direction: asc, desc.
+                  schema:
+                    type: string
+                - name: filters
+                  in: query
+                  description: |-
+                    Параметры фильтрации списка кластеров в виде "field condition value" или "field:value"(include).
+                     Возможные значения для field: displayName, state, kubeAPIInternet, masterCount, nodePoolCount, createdAt.
+                     Возможные значения для condition: =, !=, >, >=, <, <=.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: projectId
+                  in: query
+                  description: Идентификатор проекта.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListClustersResponse'
+        post:
+            tags:
+                - ClusterService
+            description: Создание нового кластера.
+            operationId: ClusterService_Create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateClusterRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateClusterResponse'
+    /v2/clusters/{clusterId}:
+        get:
+            tags:
+                - ClusterService
+            description: Получение информации о кластере.
+            operationId: ClusterService_Get
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetClusterResponse'
+        delete:
+            tags:
+                - ClusterService
+            description: Удаление кластера.
+            operationId: ClusterService_Delete
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteClusterResponse'
+        patch:
+            tags:
+                - ClusterService
+            description: Редактирование существующего кластера.
+            operationId: ClusterService_Edit
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EditClusterRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EditClusterResponse'
+    /v2/clusters/{clusterId}/addons:
+        get:
+            tags:
+                - ClusterAddonService
+            description: Получение списка плагинов кластера.
+            operationId: ClusterAddonService_ListClusterAddons
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+                - name: all
+                  in: query
+                  description: Получить все активные и ранее удаленные плагинов кластера.
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListClusterAddonsResponse'
+        post:
+            tags:
+                - ClusterAddonService
+            description: Добавление нового плагина в кластер.
+            operationId: ClusterAddonService_AddClusterAddon
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddClusterAddonRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AddClusterAddonResponse'
+    /v2/clusters/{clusterId}/addons/get:
+        get:
+            tags:
+                - ClusterAddonService
+            description: Получение информации по плагинам кластера.
+            operationId: ClusterAddonService_GetClusterAddon
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+                - name: addonId
+                  in: query
+                  description: Идентификатор плагина.
+                  schema:
+                    type: string
+                - name: addonName
+                  in: query
+                  description: |-
+                    Название плагина, например cilium.
+                     Поиск по названию выполняется только среди активных плагинов.
+                     Для получения информации по удаленному плагину указывайте идентификатор плагина.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetClusterAddonResponse'
+    /v2/clusters/{clusterId}/addons/{addonName}:
+        delete:
+            tags:
+                - ClusterAddonService
+            description: Удаление плагина из кластера.
+            operationId: ClusterAddonService_DeleteClusterAddon
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+                - name: addonName
+                  in: path
+                  description: Название плагина, например cilium.
+                  required: true
+                  schema:
+                    type: string
+                - name: preserve
+                  in: query
+                  description: |-
+                    Если флаг установлен, то сервис не будет управлять плагином,
+                     но плагин не будет удален из кластера.
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteClusterAddonResponse'
+        patch:
+            tags:
+                - ClusterAddonService
+            description: Обновление существующего плагина на новую версию или применение новой конфигурации.
+            operationId: ClusterAddonService_UpdateClusterAddon
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+                - name: addonName
+                  in: path
+                  description: Название плагина, например cilium.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateClusterAddonRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateClusterAddonResponse'
+    /v2/clusters/{clusterId}/kubeconfig:
+        get:
+            tags:
+                - ClusterService
+            description: Получение kubeconfig для кластера.
+            operationId: ClusterService_KubeConfig
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+                - name: network
+                  in: query
+                  description: |-
+                    Тип сети, для которой запрашивается kubeconfig.
+                     Опциональное поле.
+                     Если не указано, используется сеть по умолчанию.
+                  schema:
+                    enum:
+                        - NETWORK_TYPE_UNSPECIFIED
+                        - NETWORK_TYPE_PRIVATE
+                        - NETWORK_TYPE_PUBLIC
+                    type: string
+                    format: enum
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetKubeConfigResponse'
+    /v2/clusters/{clusterId}/node-pools:
+        post:
+            tags:
+                - NodePoolService
+            description: Создание новой группы узлов.
+            operationId: NodePoolService_CreateNodePool
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера, в котором будет создана группа узлов.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateNodePoolRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateNodePoolResponse'
+    /v2/clusters/{clusterId}/resume:
+        post:
+            tags:
+                - ClusterService
+            description: Возобновление работы кластера.
+            operationId: ClusterService_Resume
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResumeClusterResponse'
+    /v2/clusters/{clusterId}/stop:
+        post:
+            tags:
+                - ClusterService
+            description: Приостановка кластера.
+            operationId: ClusterService_StopCluster
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StopClusterResponse'
+    /v2/clusters/{clusterId}/upgrade:
+        post:
+            tags:
+                - ClusterService
+            description: Обновление плоскости управления кластера.
+            operationId: ClusterService_UpgradeControlPlane
+            parameters:
+                - name: clusterId
+                  in: path
+                  description: Идентификатор кластера.
+                  required: true
+                  schema:
+                    type: string
+                - name: version
+                  in: query
+                  description: |-
+                    Версия Kubernetes, на которую выполняется обновление.
+
+                     Пользователь может указать определенную версию или специальную метку:
+
+                     - "latest": выбор наиболее актуальной версии Kubernetes.
+                     - "1.X": выбор наивысшей патчевой версии среди 1.X версий.
+                     - "1.X.Y": выбор конкретной версии Kubernetes.
+
+                     Если версия не указана, то будет выполнено обновление
+                     системных компонентов платформы Managed Kubernetes в кластере без обновления версии Kubernetes.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpgradeControlPlaneResponse'
+    /v2/k8sversions:
+        get:
+            tags:
+                - MetaService
+            description: Получение списка актуальных версии Kubernetes, доступных для установки.
+            operationId: MetaService_ListK8SVersions
+            parameters:
+                - name: limit
+                  in: query
+                  description: Количество версий Kubernetes в ответе.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: offset
+                  in: query
+                  description: Количество пропущенных версий.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: sort
+                  in: query
+                  description: |-
+                    Параметры сортировки списка версий Kubernetes в виде "field direction".
+                     Возможные значения для field: version, supportMode, etcdVersions, osFamily.
+                     Возможные значения для direction: asc, desc.
+                  schema:
+                    type: string
+                - name: filters
+                  in: query
+                  description: |-
+                    Параметры фильтрации списка версий Kubernetes в виде "field:value"(include) или "filter condition value".
+                     Возможные значения для field: version, releaseChannel, patch.
+                     Возможные значения для condition: =, >=.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListK8SVersionsResponse'
+    /v2/node-pools:
+        get:
+            tags:
+                - NodePoolService
+            description: Получение списка групп узлов.
+            operationId: NodePoolService_ListNodePools
+            parameters:
+                - name: clusterId
+                  in: query
+                  description: Идентификатор кластера.
+                  schema:
+                    type: string
+                - name: limit
+                  in: query
+                  description: Количество групп узлов в ответе.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: offset
+                  in: query
+                  description: Количество пропущенных групп узлов.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: sort
+                  in: query
+                  description: "Параметры сортировки списка кластеров.\n Имеют вид \"field direction\". \n Возможные значения для field: displayName, nodeCount, cpu, ram, disk, createdAt.\n Возможные значения для direction: asc, desc."
+                  schema:
+                    type: string
+                - name: filters
+                  in: query
+                  description: |-
+                    Параметры фильтрации списка групп узлов.
+                     Имеют вид  "field condition value" или "field:value"(include).
+                     Возможные значения для field: displayName, state, nodeCount, cpu, ram, disk, createdAt.
+                     Возможные значения для condition: =, !=, >, >=, <, <=.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListNodePoolsResponse'
+    /v2/node-pools/calc-kube-reserved:
+        get:
+            tags:
+                - NodePoolService
+            description: "Планирование количества зарезервированных ресурсов под системные компоненты \n на узле для указанной конфигурации виртуальной машины."
+            operationId: NodePoolService_CalcKubeReserved
+            parameters:
+                - name: cpu
+                  in: query
+                  description: Количество ядер процессора виртуальной машины.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: ramGb
+                  in: query
+                  description: Оперативная память виртуальной машины, ГБ.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: diskSizeGb
+                  in: query
+                  description: Размер подключаемого диска, ГБ.
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/KubeReserved'
+    /v2/node-pools/{nodePoolId}:
+        get:
+            tags:
+                - NodePoolService
+            description: Получение информации по конкретной группе узлов.
+            operationId: NodePoolService_GetNodePool
+            parameters:
+                - name: nodePoolId
+                  in: path
+                  description: Идентификатор группы узлов.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetNodePoolResponse'
+        delete:
+            tags:
+                - NodePoolService
+            description: Удаление группы узлов.
+            operationId: NodePoolService_DeleteNodePool
+            parameters:
+                - name: nodePoolId
+                  in: path
+                  description: Идентификатор группы узлов.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteNodePoolResponse'
+        patch:
+            tags:
+                - NodePoolService
+            description: Редактирование группы узлов.
+            operationId: NodePoolService_EditNodePool
+            parameters:
+                - name: nodePoolId
+                  in: path
+                  description: Идентификатор группы узлов.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EditNodePoolRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EditNodePoolResponse'
+    /v2/node-pools/{nodePoolId}/kube-reserved:
+        get:
+            tags:
+                - NodePoolService
+            description: Получение количества зарезервированных ресурсов под системные компоненты на узле для указанной группы узлов.
+            operationId: NodePoolService_GetKubeReserved
+            parameters:
+                - name: nodePoolId
+                  in: path
+                  description: "Идентификатор группы узлов, \n для которой возвращается количество зарезервированных ресурсов на узле."
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/KubeReserved'
+    /v2/node-pools/{nodePoolId}/nodes:
+        get:
+            tags:
+                - NodePoolService
+            description: Получение списка узлов.
+            operationId: NodePoolService_ListNodes
+            parameters:
+                - name: nodePoolId
+                  in: path
+                  description: Идентификатор группы узлов.
+                  required: true
+                  schema:
+                    type: string
+                - name: limit
+                  in: query
+                  description: Количество узлов в ответе.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: offset
+                  in: query
+                  description: Количество пропущенных узлов.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: filters
+                  in: query
+                  description: |-
+                    Параметры фильтрации списка узлов в виде "field condition value" или "field:value"(include).
+                     Возможные значения для field: state, hostname, ipaddress, vmname.
+                     Возможные значения для condition: =, :.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: sort
+                  in: query
+                  description: "Параметры сортировки списка узлов.\n Имеют вид \"field direction\". \n Возможные значения для field: createdAt, updatedAt, vmname, hostname.\n Возможные значения для direction: asc, desc."
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListNodesResponse'
+    /v2/node-pools/{nodePoolId}/upgrade:
+        post:
+            tags:
+                - NodePoolService
+            description: Обновление группы узлов кластера.
+            operationId: NodePoolService_UpgradeNodePool
+            parameters:
+                - name: nodePoolId
+                  in: path
+                  description: Идентификатор группы узлов.
+                  required: true
+                  schema:
+                    type: string
+                - name: version
+                  in: query
+                  description: |-
+                    Версия Kubernetes, на которую выполняется обновление.
+
+                     Пользователь может указать определенную версию или специальную метку:
+
+                     - "latest": выбор наиболее актуальной версии Kubernetes.
+                     - "1.X": выбор наивысшей патчевой версии среди 1.X версий.
+                     - "1.X.Y": выбор конкретной версии Kubernetes.
+
+                     Если версия не указана, то будет выполнено обновление
+                     системных компонентов платформы Managed Kubernetes в группе узлов без обновления версии Kubernetes.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpgradeNodePoolResponse'
+    /v2/quotas:
+        get:
+            tags:
+                - QuotasService
+            description: Получение доступных квот и объема используемых ресурсов.
+            operationId: QuotasService_GetUsageWithQuotas
+            parameters:
+                - name: productInstanceId
+                  in: query
+                  description: Идентификатор услуги (deprecated).
+                  schema:
+                    type: string
+                - name: projectId
+                  in: query
+                  description: Идентификатор проекта.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUsageWithQuotasResponse'
+    /v2/tasks:
+        get:
+            tags:
+                - TaskService
+            description: Получение списка задач.
+            operationId: TaskService_ListTasks
+            parameters:
+                - name: productInstanceId
+                  in: query
+                  description: |-
+                    Deprecated
+                     Идентификатор услуги.
+                  schema:
+                    type: string
+                - name: limit
+                  in: query
+                  description: Количество задач в ответе.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: offset
+                  in: query
+                  description: Количество пропущенных задач.
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: sort
+                  in: query
+                  description: "Параметры сортировки списка задач в виде \"field direction\". \n Возможные значения для field: updatedAt, createdAt.\n Возможные значения для direction: asc, desc."
+                  schema:
+                    type: string
+                - name: filters
+                  in: query
+                  description: |-
+                    Параметры фильтрации списка задач в виде "field condition value" или "field:value"(include).
+                     Возможные значения для field: action, objectType, status.
+                     Возможные значения для condition: =.
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: projectId
+                  in: query
+                  description: Идентификатор проекта.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListTasksResponse'
+    /v2/tasks/{taskId}:
+        get:
+            tags:
+                - TaskService
+            description: Получение задачи.
+            operationId: TaskService_GetTask
+            parameters:
+                - name: taskId
+                  in: path
+                  description: Идентификатор задачи.
+                  required: true
+                  schema:
+                    type: string
+                - name: projectId
+                  in: query
+                  description: Идентификатор проекта.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTaskResponse'
+components:
+    schemas:
+        AddClusterAddonRequest:
+            type: object
+            properties:
+                clusterId:
+                    type: string
+                    description: Идентификатор кластера.
+                addonName:
+                    type: string
+                    description: Название плагина, например cilium.
+                addonVersion:
+                    type: string
+                    description: Версия плагина в формате SemVer.
+                addonConfiguration:
+                    type: string
+                    description: |-
+                        Пользовательская конфигурация плагина в JSON формате согласно схеме.
+                         Поддерживает переменные автоподстановки, заключенные в символы {{ и }}:
+                         {{clusterID}} — уникальный идентификатор кластера;
+                         {{clusterName}} — программное имя кластера;
+                         {{productInstanceID}} — идентификатор экземпляра продукта;
+                         {{nodeCIDR}} — CIDR сети узлов;
+                         {{serviceCIDR}} — CIDR сервисной сети.
+                resolveMode:
+                    enum:
+                        - RESOLVE_CONFLICTS_MODE_UNSPECIFIED
+                        - RESOLVE_CONFLICTS_MODE_NONE
+                        - RESOLVE_CONFLICTS_MODE_OVERWRITE
+                        - RESOLVE_CONFLICTS_MODE_PRESERVE
+                    type: string
+                    description: Режим разрешения конфликтов.
+                    format: enum
+            description: Контракт для запроса на добавление нового плагина в кластер.
+        AddClusterAddonResponse:
+            type: object
+            properties:
+                addon:
+                    allOf:
+                        - $ref: '#/components/schemas/ClusterAddon'
+                    description: Информация о добавляемом плагине.
+            description: Контракт для ответа на добавление нового плагина в кластер.
+        Addon:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: Название плагина.
+                displayName:
+                    type: string
+                    description: Название плагина в удобочитаемом виде.
+                description:
+                    type: string
+                    description: Описание плагина для пользователя.
+                categories:
+                    type: array
+                    items:
+                        type: string
+                    description: Категории плагина.
+                createdAt:
+                    type: string
+                    description: Дата и время создания плагина.
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: Дата и время последнего обновления плагина.
+                    format: date-time
+            description: Описание плагина.
+        AddonAction:
+            type: object
+            properties:
+                type:
+                    enum:
+                        - ADDON_ACTION_TYPE_UNSPECIFIED
+                        - ADDON_ACTION_TYPE_ADD
+                        - ADDON_ACTION_TYPE_UPDATE
+                        - ADDON_ACTION_TYPE_DELETE
+                    type: string
+                    description: Тип действия над плагином.
+                    format: enum
+                status:
+                    enum:
+                        - ADDON_ACTION_STATUS_UNSPECIFIED
+                        - ADDON_ACTION_STATUS_IN_PROGRESS
+                        - ADDON_ACTION_STATUS_COMPLETED
+                        - ADDON_ACTION_STATUS_FAILED
+                        - ADDON_ACTION_STATUS_PENDING
+                    type: string
+                    description: Статус действия.
+                    format: enum
+                issues:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AddonIssue'
+                    description: Список проблем, возникших при выполнении действия.
+                params:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AddonActionParam'
+                    description: Список параметров, используемых при выполнении действия над плагином.
+                addonNamespace:
+                    type: string
+                    description: Пространство имен, в пределах которого выполняется действие над плагином.
+                addonConfiguration:
+                    type: string
+                    description: Пользовательская конфигурация плагина.
+                createdAt:
+                    type: string
+                    description: Дата и время действия.
+                    format: date-time
+                createdBy:
+                    type: string
+                    description: Идентификатор пользователя, который инициировал действие над плагином.
+            description: Информация о действии над плагином.
+        AddonActionParam:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: Имя параметра.
+                value:
+                    type: string
+                    description: Значение параметра.
+            description: Параметры, используемые при выполнении действия над плагином.
+        AddonIssue:
+            type: object
+            properties:
+                code:
+                    enum:
+                        - ADDON_ISSUE_CODE_UNSPECIFIED
+                        - ADDON_ISSUE_CODE_CONFLICT
+                        - ADDON_ISSUE_CODE_REMOTE
+                        - ADDON_ISSUE_CODE_INTERNAL
+                    type: string
+                    description: Код возможных проблем.
+                    format: enum
+                message:
+                    type: string
+                    description: Содержание проблемы.
+            description: Информация о проблемах при управлении плагинами в кластере.
+        AddonRelease:
+            type: object
+            properties:
+                addonVersion:
+                    type: string
+                    description: Версия плагина в формате SemVer.
+                addonNamespace:
+                    type: string
+                    description: Пространство имен, в которое должен устанавливаться плагин.
+                kubeVersions:
+                    deprecated: true
+                    type: string
+                    description: |-
+                        [Deprecated] Диапазон поддерживаемых версий Kubernetes в формате SemVer.
+                         Используйте значение Requirements.kube_versions.
+                configurationSchema:
+                    type: string
+                    description: JSON схема, относительно которой валидируется конфигурация плагина.
+                createdAt:
+                    type: string
+                    description: Дата и время создания версии плагина.
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: Дата и время обновления версии плагина.
+                    format: date-time
+                mode:
+                    enum:
+                        - SUPPORT_MODE_UNSPECIFIED
+                        - SUPPORT_MODE_ACTIVE
+                        - SUPPORT_MODE_EXPERIMENTAL
+                        - SUPPORT_MODE_END_OF_SUPPORT
+                        - SUPPORT_MODE_END_OF_LIFE
+                        - SUPPORT_MODE_INACTIVE
+                    type: string
+                    description: Режим поддержки версии.
+                    format: enum
+                requirements:
+                    allOf:
+                        - $ref: '#/components/schemas/AddonRelease_Requirements'
+                    description: Требования к кластеру для установки плагина.
+            description: Описание версии плагина.
+        AddonRelease_Requirements:
+            type: object
+            properties:
+                kubeVersions:
+                    type: string
+                    description: Диапазон поддерживаемых версий Kubernetes в формате SemVer.
+                readyWorkers:
+                    type: integer
+                    description: Минимальное количество доступных рабочих узлов в кластере.
+                    format: uint32
+            description: Требования к кластеру для установки плагина.
+        Amounts:
+            type: object
+            properties:
+                vcpu:
+                    type: integer
+                    description: Количество ядер виртуального процессора.
+                    format: uint32
+                ram:
+                    type: integer
+                    description: Размер оперативной памяти в ГБ.
+                    format: uint32
+                diskSsdNvme:
+                    type: integer
+                    description: Размер диска в ГБ.
+                    format: uint32
+                publicIp:
+                    type: integer
+                    description: Количество публичных IP-адресов.
+                    format: uint32
+            description: Ресурсы.
+        AuditService:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: |-
+                        Включение/выключение аудит-логирования событий компонентов кластера.
+                         Возможные значения: true — аудит-логирование включено, false — аудит-логирование выключено.
+                         По умолчанию аудит-логирование включено.
+            description: Аудит-логирование событий компонентов кластера.
+        AvailabilityZone:
+            type: object
+            properties:
+                zoneId:
+                    type: string
+                    description: Идентификатор зоны доступности.
+                name:
+                    type: string
+                    description: Название зоны доступности.
+            description: Информация о зоне доступности.
+        BootstrapManagedAddons:
+            type: object
+            properties:
+                horizontalPodAutoscaling:
+                    allOf:
+                        - $ref: '#/components/schemas/HorizontalPodAutoscaling'
+                    description: "Конфигурация плагина горизонтального масштабирования подов в кластере.\n Увеличивает или уменьшает количество реплик подов \n в зависимости от потребления ресурсов уже работающих подов."
+                persistentDiskCsiDriver:
+                    allOf:
+                        - $ref: '#/components/schemas/PersistentDiskCSIDriver'
+                    description: "Конфигурация плагина CSI Driver для работы \n с постоянными томами для  хранения данных."
+                kubeProxy:
+                    allOf:
+                        - $ref: '#/components/schemas/KubeProxy'
+                    description: Конфигурация плагина kube-proxy.
+            description: Информация о добавленных плагинов в процессе инициализации кластера.
+        CalculatePriceRequest:
+            type: object
+            properties:
+                projectId:
+                    type: string
+                    description: UUID идентификатор проекта.
+                master:
+                    allOf:
+                        - $ref: '#/components/schemas/CalculatePriceRequest_Master'
+                    description: Описание мастер-узла.
+                nodePools:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CalculatePriceRequest_NodePool'
+                    description: Описание групп узлов.
+                disks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CalculatePriceRequest_Disk'
+                    description: Описание дисков.
+                rentPublicIpCount:
+                    type: integer
+                    description: Количество привязанных публичных IP-адресов в шт.
+                    format: uint32
+            description: Запрос на получение расчета по проекту.
+        CalculatePriceRequest_Disk:
+            type: object
+            properties:
+                size:
+                    type: string
+                    description: Объем дискового хранилища в ГБ.
+                type:
+                    enum:
+                        - DISK_TYPE_UNSPECIFIED
+                        - DISK_TYPE_SSD_NVME
+                    type: string
+                    description: Тип диска.
+                    format: enum
+            description: Данные по диску.
+        CalculatePriceRequest_Master:
+            type: object
+            properties:
+                count:
+                    type: integer
+                    description: Количество мастер-узлов.
+                    format: uint32
+                type:
+                    enum:
+                        - MASTER_TYPE_UNSPECIFIED
+                        - MASTER_TYPE_SMALL
+                        - MASTER_TYPE_MEDIUM
+                        - MASTER_TYPE_LARGE
+                        - MASTER_TYPE_EXTRALARGE
+                    type: string
+                    description: Тип мастер-узла.
+                    format: enum
+            description: Данные по мастеру.
+        CalculatePriceRequest_NodePool:
+            type: object
+            properties:
+                count:
+                    type: integer
+                    description: Количество рабочих узлов в группе.
+                    format: uint32
+                cpu:
+                    type: integer
+                    description: Количество процессоров.
+                    format: uint32
+                ram:
+                    type: integer
+                    description: Размер оперативной памяти в ГБ.
+                    format: uint32
+                disk:
+                    allOf:
+                        - $ref: '#/components/schemas/CalculatePriceRequest_Disk'
+                    description: Диск, используемый в группе узлов.
+                oversubscription:
+                    enum:
+                        - OVERSUBSCRIPTION_1
+                        - OVERSUBSCRIPTION_3
+                        - OVERSUBSCRIPTION_10
+                    type: string
+                    description: Применяемый коэффициент.
+                    format: enum
+            description: Данные по группе узлов.
+        CalculatePriceResponse:
+            type: object
+            properties:
+                masterPrice:
+                    type: number
+                    description: Цена за мастер-узел.
+                    format: double
+                nodePoolPrices:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CalculatePriceResponse_NodePoolPrice'
+                    description: Цены за группы узлов в разбивке по каждой группе (порядок из запроса сохранен).
+                diskPrices:
+                    type: array
+                    items:
+                        type: number
+                        format: double
+                    description: Цены за дополнительные диски для томов в разбивке по дискам (порядок из запроса сохранен).
+                rentPublicIpPrice:
+                    type: number
+                    description: Цена за публичные IP.
+                    format: double
+                totalPricePerMonth:
+                    type: number
+                    description: Итоговая цена за месяц.
+                    format: double
+                totalPricePerHour:
+                    type: number
+                    description: Итоговая цена за час.
+                    format: double
+            description: Результат запроса на расчет.
+        CalculatePriceResponse_NodePoolPrice:
+            type: object
+            properties:
+                disk:
+                    type: number
+                    description: Стоимость диска в час.
+                    format: double
+                flavor:
+                    type: number
+                    description: Стоимость RAM, CPU в час.
+                    format: double
+            description: Структура цены за группу узлов.
+        Calico:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: Опция использования Calico в качестве CNI-плагина кластера.
+            description: Конфигурация сетевого плагина Calico.
+        Cilium:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: Опция использования Cilium в качестве CNI-плагина кластера.
+            description: Конфигурация сетевого плагина Cilium.
+        Cluster:
+            type: object
+            properties:
+                clusterId:
+                    type: string
+                    description: Идентификатор кластера, присваивается автоматически при создании кластера.
+                displayName:
+                    type: string
+                    description: Название кластера, которое ввел пользователь, 3 символа < длина < 60 символов.
+                createdBy:
+                    type: string
+                    description: Идентификатор пользователя, создавшего кластер.
+                updatedBy:
+                    type: string
+                    description: Идентификатор последнего пользователя, редактировавшего кластер.
+                createdAt:
+                    type: string
+                    description: Время создания кластера, присваивается автоматически при создании кластера.
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: Время последнего редактирования кластера.
+                    format: date-time
+                nodePoolsInfo:
+                    allOf:
+                        - $ref: '#/components/schemas/NodePoolsInfo'
+                    description: Информация по группам узлов.
+                controlPlane:
+                    allOf:
+                        - $ref: '#/components/schemas/ControlPlane'
+                    description: Конфигурация плоскости управления (обязательное поле).
+                networkConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/NetworkConfigurationResponse'
+                    description: Сетевая конфигурация кластера (обязательное поле).
+                state:
+                    enum:
+                        - OBJECT_STATE_UNSPECIFIED
+                        - OBJECT_STATE_PENDING
+                        - OBJECT_STATE_PROVISIONING
+                        - OBJECT_STATE_RUNNING
+                        - OBJECT_STATE_PAUSING
+                        - OBJECT_STATE_PAUSED
+                        - OBJECT_STATE_RESUMING
+                        - OBJECT_STATE_UPDATING
+                        - OBJECT_STATE_DELETING
+                        - OBJECT_STATE_ERROR
+                        - OBJECT_STATE_SCALING_UP
+                        - OBJECT_STATE_SCALING_DOWN
+                        - OBJECT_STATE_STOPPING
+                        - OBJECT_STATE_STOPPED
+                        - OBJECT_STATE_SUSPENDING
+                        - OBJECT_STATE_SUSPENDED
+                        - OBJECT_STATE_UPGRADING
+                    type: string
+                    description: Состояние кластера (мастеров)
+                    format: enum
+                loggingService:
+                    allOf:
+                        - $ref: '#/components/schemas/LoggingService'
+                    description: Параметры логирования событий компонентов кластера.
+                monitoringService:
+                    allOf:
+                        - $ref: '#/components/schemas/MonitoringService'
+                    description: Параметры мониторинга компонентов кластера.
+                releaseChannel:
+                    enum:
+                        - RELEASE_CHANNEL_UNSPECIFIED
+                        - RELEASE_CHANNEL_RAPID
+                        - RELEASE_CHANNEL_REGULAR
+                        - RELEASE_CHANNEL_STABLE
+                    type: string
+                    description: Релизный канал, на который подписан кластер.
+                    format: enum
+                auditService:
+                    allOf:
+                        - $ref: '#/components/schemas/AuditService'
+                    description: Параметры аудит-логирования событий компонентов кластера.
+                versionUpgrade:
+                    allOf:
+                        - $ref: '#/components/schemas/VersionUpgrade'
+                    description: Информация о доступных версиях Kubernetes для обновления плоскости управления кластера.
+            description: Информация о кластере.
+        ClusterAddon:
+            type: object
+            properties:
+                clusterId:
+                    type: string
+                    description: Идентификатор кластера.
+                addonId:
+                    type: string
+                    description: Идентификатор плагина.
+                addonName:
+                    type: string
+                    description: Название плагина, например cilium.
+                addonVersion:
+                    type: string
+                    description: Версия плагина в формате SemVer.
+                status:
+                    enum:
+                        - ADDON_STATUS_UNSPECIFIED
+                        - ADDON_STATUS_ADDING
+                        - ADDON_STATUS_ADD_FAILED
+                        - ADDON_STATUS_ACTIVE
+                        - ADDON_STATUS_UPDATING
+                        - ADDON_STATUS_UPDATE_FAILED
+                        - ADDON_STATUS_DELETING
+                        - ADDON_STATUS_DELETE_FAILED
+                        - ADDON_STATUS_DELETED
+                    type: string
+                    description: Статус плагина в кластере.
+                    format: enum
+                addedAt:
+                    type: string
+                    description: Дата и время добавления плагина в кластер.
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: Дата и время последнего изменения плагина.
+                    format: date-time
+                addedBy:
+                    type: string
+                    description: Идентификатор пользователя, который добавил плагин в кластер.
+                history:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AddonAction'
+                    description: История изменений плагина.
+            description: Информация о плагине.
+        ControlPlane:
+            type: object
+            properties:
+                zones:
+                    type: array
+                    items:
+                        type: string
+                    description: "Опциональное поле.  \n Взаимодействует с флагом multizonal.\n Указывает в каких зонах будут размещены узлы управления."
+                multizonal:
+                    type: boolean
+                    description: |-
+                        Флаг поддержки мультизональности.
+                         Зависит от поля zones.
+
+                         Если зоны не указаны и флаг отключен, используется случайная зона из шаблона конфигураций для ВМ, подходящий под MasterType.
+                         Если зоны не указаны и флаг включен, используются все зоны в которых поддерживается шаблон конфигурации для ВМ, подходящий под MasterType.
+
+                         Если зоны указаны и флаг отключен, используется первая зона из списка zones.
+                         Если зоны указаны и флаг включен, используются зоны из списка zones.
+                count:
+                    type: integer
+                    description: Количество узлов плоскости управления.
+                    format: uint32
+                type:
+                    enum:
+                        - MASTER_TYPE_UNSPECIFIED
+                        - MASTER_TYPE_SMALL
+                        - MASTER_TYPE_MEDIUM
+                        - MASTER_TYPE_LARGE
+                        - MASTER_TYPE_EXTRALARGE
+                    type: string
+                    description: Тип узла плоскости управления.
+                    format: enum
+                version:
+                    type: string
+                    description: Версия Kubernetes.
+                upgradeInfo:
+                    allOf:
+                        - $ref: '#/components/schemas/ControlPlane_UpgradeInfo'
+                    description: Информация о процессе обновления плоскости управления кластера.
+            description: Информация по конфигурации плоскости управления.
+        ControlPlaneEndpoint:
+            type: object
+            properties:
+                network:
+                    enum:
+                        - NETWORK_TYPE_UNSPECIFIED
+                        - NETWORK_TYPE_PRIVATE
+                        - NETWORK_TYPE_PUBLIC
+                    type: string
+                    description: Тип сети, которой принадлежит адрес.
+                    format: enum
+                address:
+                    type: string
+                    description: Адрес плоскости управления кластера в формате "https://domain:port".
+            description: Адрес плоскости управления кластера.
+        ControlPlaneRequest:
+            type: object
+            properties:
+                zones:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Опциональное поле.
+                         Взаимодействует с опцией мультизональности.
+                         Указывает, в каких зонах будут размещены узлы плоскости управления.
+                multizonal:
+                    type: boolean
+                    description: |-
+                        Поддержка мультизональности.
+                         Зависит от значения поля zones.
+
+                         Если зоны не указаны и мультизональность:
+                          - false — используется cлучайная зона из поддерживаемых шаблоном конфигурации для ВМ.
+                          - true — используются все зоны, в которых поддерживается шаблон конфигурации для ВМ.
+
+                         Если зоны указаны и мультизональность:
+                          - false — используется первая зона из списка zones, эта зона должна поддерживать шаблон конфигурации для ВМ.
+                          - true — используются зоны из zones, поддерживаемые шаблоном конфигурации для ВМ.
+                count:
+                    type: integer
+                    description: Количество узлов плоскости управления.
+                    format: uint32
+                type:
+                    enum:
+                        - MASTER_TYPE_UNSPECIFIED
+                        - MASTER_TYPE_SMALL
+                        - MASTER_TYPE_MEDIUM
+                        - MASTER_TYPE_LARGE
+                        - MASTER_TYPE_EXTRALARGE
+                    type: string
+                    description: Тип узла плоскости управления.
+                    format: enum
+                version:
+                    type: string
+                    description: Версия Kubernetes.
+            description: Информация о конфигурации плоскости управления кластера.
+        ControlPlane_UpgradeInfo:
+            type: object
+            properties:
+                desiredVersion:
+                    type: string
+                    description: Версия Kubernetes, на которую выполняется обновление.
+                phase:
+                    enum:
+                        - PHASE_UNSPECIFIED
+                        - PHASE_RUNNING
+                        - PHASE_ROLLBACK
+                    type: string
+                    description: Стадия обновления.
+                    format: enum
+            description: Данные об обновлении.
+        CreateClusterRequest:
+            type: object
+            properties:
+                displayName:
+                    type: string
+                    description: |-
+                        Название кластера.
+                         Может содержать буквы, цифры, дефис, подчеркивание.
+                         Допустимое количество символов от 3 до 60.
+                projectId:
+                    type: string
+                    description: Идентификатор проекта.
+                controlPlane:
+                    deprecated: true
+                    allOf:
+                        - $ref: '#/components/schemas/ControlPlane'
+                    description: Конфигурация плоскости управления.
+                networkConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/NetworkConfigurationRequest'
+                    description: Сетевая конфигурация кластера и плоскости управления.
+                addons:
+                    deprecated: true
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InstantAddon'
+                    description: '[Deprecated] Список плагинов для установки сразу же после создания кластера.'
+                loggingService:
+                    allOf:
+                        - $ref: '#/components/schemas/LoggingService'
+                    description: Параметры логирования событий компонентов кластера.
+                monitoringService:
+                    allOf:
+                        - $ref: '#/components/schemas/MonitoringService'
+                    description: Параметры мониторинга компонентов кластера.
+                controlPlaneConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/ControlPlaneRequest'
+                    description: Конфигурация плоскости управления кластера.
+                auditService:
+                    allOf:
+                        - $ref: '#/components/schemas/AuditService'
+                    description: Параметры аудит-логирования событий компонентов кластера.
+                releaseChannel:
+                    enum:
+                        - RELEASE_CHANNEL_UNSPECIFIED
+                        - RELEASE_CHANNEL_RAPID
+                        - RELEASE_CHANNEL_REGULAR
+                        - RELEASE_CHANNEL_STABLE
+                    type: string
+                    description: Релизный канал, на который подписан кластер.
+                    format: enum
+                bootstrapManagedAddons:
+                    allOf:
+                        - $ref: '#/components/schemas/BootstrapManagedAddons'
+                    description: |-
+                        Конфигурация плагинов, которые будут установлены автоматически при создании кластера.
+                         Плагины можно отключить, если вы планируете использовать сторонние решения или установить их позже.
+            description: Запрос на создание нового кластера.
+        CreateClusterResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на создание кластера.
+            description: Ответ с информацией о задаче на создание кластера.
+        CreateNodePoolRequest:
+            type: object
+            properties:
+                clusterId:
+                    type: string
+                    description: Идентификатор кластера, в котором будет создана группа узлов.
+                displayName:
+                    type: string
+                    description: |-
+                        Название группы узлов. Должно быть уникальным.
+                         Может содержать буквы, цифры, подчеркивание.
+                         Допустимое количество символов от 3 до 60.
+                scalePolicy:
+                    allOf:
+                        - $ref: '#/components/schemas/ScalePolicy'
+                    description: Политика масштабирования группы узлов.
+                networkConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/NodesNetworkConfigurationRequest'
+                    description: Конфигурация сети группы узлов.
+                taints:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Taint'
+                    description: Список ограничений (taints), применяемых к узлам в группе, https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/.
+                labels:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: |-
+                        Набор меток (labels), которые будут применены к узлам в группе.
+                         Метки добавляются в дополнение к стандартным меткам, которые может применить Kubernetes.
+                         В случае конфликтов поведение неопределенно и может меняться в зависимости от версии Kubernetes,
+                         поэтому лучше избегать таких конфликтов.
+                         https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/.
+                machineConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/HardwareComputeRequest'
+                    description: Параметры конфигурации виртуальной машины.
+                updateConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/NodePoolUpdateConfiguration'
+                    description: Политика обновления группы узлов.
+                remoteAccess:
+                    allOf:
+                        - $ref: '#/components/schemas/RemoteAccess'
+                    description: Конфигурация удаленного доступа к виртуальной машине в группе.
+                zone:
+                    type: string
+                    description: |-
+                        Зона доступности, в которой будут размещены узлы группы.
+                         Если значение не указано:
+                         - Для зонального кластера будет выбрана зона доступности, в которой расположены мастер-узлы.
+                         - Для регионального кластера (multi AZ) случайным образом будет выбрана одна из зон, в которой расположены мастер-узлы.
+            description: Контракт для запроса на создание новой группы узлов.
+        CreateNodePoolResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на создание группы узлов.
+            description: Контракт для ответа на создание новой группы узлов.
+        DeleteClusterAddonResponse:
+            type: object
+            properties:
+                action:
+                    allOf:
+                        - $ref: '#/components/schemas/AddonAction'
+                    description: Информация об удалении плагина.
+            description: Контракт для ответа на удаление плагина из кластера.
+        DeleteClusterResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на удаление кластера.
+            description: Ответ с информацией о задаче на удаление кластера.
+        DeleteNodePoolResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на удаление группы узлов.
+            description: Контракт для ответа на запрос информации о задаче на удаление группы узлов.
+        EditClusterRequest:
+            type: object
+            properties:
+                clusterId:
+                    type: string
+                    description: Идентификатор кластера.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/EditClusterRequest_ClusterData'
+                    description: Информацию для редактирования.
+            description: Запрос на редактирование существующего кластера.
+        EditClusterRequest_ClusterData:
+            type: object
+            properties:
+                displayName:
+                    type: string
+                    description: |-
+                        Название кластера.
+                         Может содержать буквы, цифры, дефис, подчеркивание.
+                         Допустимое количество символов от 3 до 60.
+                masterCount:
+                    type: integer
+                    description: Количество узлов плоскости управления.
+                    format: uint32
+                releaseChannel:
+                    enum:
+                        - RELEASE_CHANNEL_UNSPECIFIED
+                        - RELEASE_CHANNEL_RAPID
+                        - RELEASE_CHANNEL_REGULAR
+                        - RELEASE_CHANNEL_STABLE
+                    type: string
+                    description: Релизный канал, на который подписан кластер.
+                    format: enum
+            description: Информацию о кластере, которую можно изменить.
+        EditClusterResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на редактирование кластера.
+            description: Ответ с информацией о задаче на редактирование существующего кластера.
+        EditNodePoolRequest:
+            type: object
+            properties:
+                nodePoolId:
+                    type: string
+                    description: Идентификатор группы узлов.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/NodePoolData'
+                    description: Информацию о группе узлов, которую необходимо изменить.
+            description: Контракт запроса на редактирование группы узлов.
+        EditNodePoolResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на редактирование группы узлов.
+            description: Контракт ответа на редактирование группы узлов.
+        Flavor:
+            type: object
+            properties:
+                flavorId:
+                    type: string
+                    description: Идентификатор шаблона конфигурации.
+                name:
+                    type: string
+                    description: Название шаблона конфигурации.
+                cpu:
+                    type: integer
+                    description: Количество ядер процессора виртуальной машины.
+                    format: uint32
+                ram:
+                    type: integer
+                    description: Оперативная память виртуальной машины в ГБ.
+                    format: uint32
+                zoneIds:
+                    type: array
+                    items:
+                        type: string
+                    description: Список зон, в которых существует указанный шаблон конфигурации.
+                oversubscription:
+                    type: string
+                    description: Коэффициент переподписки.
+            description: Информация о шаблоне конфигурации виртуальной машины.
+        GetClusterAddonResponse:
+            type: object
+            properties:
+                addon:
+                    allOf:
+                        - $ref: '#/components/schemas/ClusterAddon'
+                    description: Информация о плагине.
+            description: Контракт для ответа на получение информации по плагину кластера.
+        GetClusterResponse:
+            type: object
+            properties:
+                cluster:
+                    allOf:
+                        - $ref: '#/components/schemas/Cluster'
+                    description: Информация о кластере.
+                projectId:
+                    type: string
+                    description: Идентификатор проекта.
+            description: Ответ с информацией о кластере.
+        GetKubeConfigResponse:
+            type: object
+            properties:
+                config:
+                    type: string
+                    description: Текст kubeconfig в base64.
+            description: Контракт для ответа на получение kubeconfig для кластера.
+        GetNodePoolResponse:
+            type: object
+            properties:
+                nodePool:
+                    allOf:
+                        - $ref: '#/components/schemas/NodePool'
+                    description: Информация по запрашиваемой группе узлов.
+            description: Контракт для ответа на запрос информации о группе узлов.
+        GetTaskResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче.
+            description: Контракт для ответа на запрос информации о задаче.
+        GetUsageWithQuotasResponse:
+            type: object
+            properties:
+                quotas:
+                    allOf:
+                        - $ref: '#/components/schemas/Amounts'
+                    description: Квоты.
+                usage:
+                    allOf:
+                        - $ref: '#/components/schemas/Amounts'
+                    description: Используемые ресурсы.
+            description: Контракт для ответа на запрос информации о доступных квот и объема используемых ресурсов.
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        HardwareCompute:
+            type: object
+            properties:
+                diskSize:
+                    type: integer
+                    description: Размер подключаемого диска в ГБ.
+                    format: uint32
+                diskType:
+                    enum:
+                        - DISK_TYPE_UNSPECIFIED
+                        - DISK_TYPE_SSD_NVME
+                    type: string
+                    description: Тип диска.
+                    format: enum
+                flavor:
+                    allOf:
+                        - $ref: '#/components/schemas/HardwareCompute_Flavor'
+                    description: Шаблон конфигурации для ВМ.
+            description: Описание инфраструктуры узлов группы.
+        HardwareComputeRequest:
+            type: object
+            properties:
+                flavorId:
+                    type: string
+                    description: Идентификатор шаблона конфигурации.
+                diskSize:
+                    type: integer
+                    description: |-
+                        Размер подключаемого диска в ГБ.
+                         Минимальный размер диска - 10 ГБ.
+                         Если не указан, то размер диска по умолчанию для кластера - 10 ГБ.
+                    format: uint32
+                diskType:
+                    enum:
+                        - DISK_TYPE_UNSPECIFIED
+                        - DISK_TYPE_SSD_NVME
+                    type: string
+                    description: Тип диска.
+                    format: enum
+            description: Запрос конфигурации виртуальной машины.
+        HardwareCompute_Flavor:
+            type: object
+            properties:
+                flavorId:
+                    type: string
+                    description: Идентификатор шаблона конфигурации.
+                name:
+                    type: string
+                    description: Название шаблона конфигурации.
+                cpu:
+                    type: integer
+                    description: Количество ядер процессора виртуальной машины.
+                    format: uint32
+                ram:
+                    type: integer
+                    description: Оперативная память виртуальной машины в ГБ.
+                    format: uint32
+                oversubscription:
+                    type: string
+                    description: Коэффициент переподписки, например "1:3".
+            description: Информация о шаблоне конфигурации виртуальной машины.
+        HorizontalPodAutoscaling:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: |-
+                        Опция подключения плагина
+                         По умолчанию плагин включен.
+            description: Конфигурация плагина горизонтального масштабирования подов в кластере.
+        InstantAddon:
+            type: object
+            properties:
+                addonName:
+                    type: string
+                    description: Машинное имя ресурса. Обязательное поле.
+                addonVersion:
+                    type: string
+                    description: |-
+                        Версия плагина в формате SemVer.
+                         Если версия не указана, то она будет выбрана автоматически.
+            description: Описание плагина, устанавливаемого сразу же при создании кластера.
+        K8SVersion:
+            type: object
+            properties:
+                version:
+                    type: string
+                    description: Версия kubernetes.
+                mode:
+                    enum:
+                        - SUPPORT_MODE_UNSPECIFIED
+                        - SUPPORT_MODE_ACTIVE
+                        - SUPPORT_MODE_EXPERIMENTAL
+                        - SUPPORT_MODE_END_OF_SUPPORT
+                        - SUPPORT_MODE_END_OF_LIFE
+                        - SUPPORT_MODE_INACTIVE
+                    type: string
+                    description: Режим поддержки версии.
+                    format: enum
+                releaseChannel:
+                    enum:
+                        - RELEASE_CHANNEL_UNSPECIFIED
+                        - RELEASE_CHANNEL_RAPID
+                        - RELEASE_CHANNEL_REGULAR
+                        - RELEASE_CHANNEL_STABLE
+                    type: string
+                    description: Релизный канал версии Kubernetes.
+                    format: enum
+            description: Информация о версии kubernetes.
+        KubeProxy:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: |-
+                        Флаг подключения плагина.
+                         По умолчанию плагин включен.
+                         Отключение плагина может привести к нарушению сетевой связности внутри кластера.
+            description: Конфигурация плагина kube-proxy.
+        KubeReserved:
+            type: object
+            properties:
+                cpuM:
+                    type: integer
+                    description: Зарезервированное количество ядер процессора виртуальной машины, millicores.
+                    format: uint32
+                ramKib:
+                    type: integer
+                    description: Зарезервированная оперативная память виртуальной машины, КиБ.
+                    format: uint32
+                storageKib:
+                    type: integer
+                    description: Зарезервированное хранилище корневой файловой системы на виртуальной машине, КиБ.
+                    format: uint32
+            description: |-
+                Информация о количестве зарезервированных ресурсов под системные
+                 компоненты на узле для указанной конфигурации виртуальной машины.
+        ListAddonReleasesResponse:
+            type: object
+            properties:
+                releases:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AddonRelease'
+                    description: Список доступных версий плагина.
+            description: Ответ со списком доступных версий плагина.
+        ListAddonsResponse:
+            type: object
+            properties:
+                addons:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Addon'
+                    description: Список доступных плагинов.
+                limit:
+                    type: integer
+                    description: Количество плагинов в ответе.
+                    format: uint32
+                offset:
+                    type: integer
+                    description: Количество пропущенных плагинов.
+                    format: uint32
+                total:
+                    type: integer
+                    description: Общее число плагинов.
+                    format: uint32
+            description: Ответ со списком доступных плагинов.
+        ListAvailableZonesWithFlavorsResponse:
+            type: object
+            properties:
+                zones:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AvailabilityZone'
+                    description: Список зон доступности.
+                flavors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Flavor'
+                    description: Список уникальных шаблонов конфигураций.
+            description: Ответ на запрос списков доступных зон и уникальных конфигураций.
+        ListClusterAddonsResponse:
+            type: object
+            properties:
+                addons:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ClusterAddon'
+                    description: Информация о плагинах.
+            description: Контракт для ответа на получение списка плагинов кластера.
+        ListClustersResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Cluster'
+                    description: Список кластеров.
+                limit:
+                    type: integer
+                    description: Количество кластеров в ответе.
+                    format: uint32
+                offset:
+                    type: integer
+                    description: Количество пропущенных кластеров.
+                    format: uint32
+                total:
+                    type: integer
+                    description: Общее число кластеров.
+                    format: uint32
+                projectId:
+                    type: string
+                    description: Идентификатор проекта.
+            description: Ответ со списком кластеров.
+        ListK8SVersionsResponse:
+            type: object
+            properties:
+                versions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/K8SVersion'
+                    description: Список версий Kubernetes.
+                limit:
+                    type: integer
+                    description: Количество версии Kubernetes в ответе.
+                    format: uint32
+                offset:
+                    type: integer
+                    description: Количество пропущенных версии Kubernetes.
+                    format: uint32
+                total:
+                    type: integer
+                    description: Общее число версии Kubernetes.
+                    format: uint32
+            description: Ответ с информации о версии kubernetes.
+        ListNodePoolsResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NodePool'
+                    description: Список групп узлов.
+                limit:
+                    type: integer
+                    description: Количество групп узлов в ответе.
+                    format: uint32
+                offset:
+                    type: integer
+                    description: Количество пропущенных групп узлов.
+                    format: uint32
+                total:
+                    type: integer
+                    description: Общее число групп узлов.
+                    format: uint32
+            description: Контракт для ответа на запрос информации о списке групп узлов.
+        ListNodesResponse:
+            type: object
+            properties:
+                nodes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Node'
+                    description: Список узлов в группе и информация по ним.
+                limit:
+                    type: integer
+                    description: Количество групп в ответе.
+                    format: uint32
+                offset:
+                    type: integer
+                    description: Количество пропущенных узлов.
+                    format: uint32
+                total:
+                    type: integer
+                    description: Общее число узлов.
+                    format: uint32
+            description: Ответ со списком узлов.
+        ListTasksResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Task'
+                    description: Список задач.
+                limit:
+                    type: integer
+                    description: Количество задач в ответе.
+                    format: uint32
+                offset:
+                    type: integer
+                    description: Количество пропущенных задач.
+                    format: uint32
+                total:
+                    type: integer
+                    description: Общее число задач.
+                    format: uint32
+            description: Контракт для ответа на запрос получение списка задач.
+        LoggingService:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: |-
+                        Включение/выключение логирования событий компонентов кластера.
+                         Возможные значения: true — логирование включено, false — логирование выключено.
+                         По умолчанию логирование включено.
+                         Если установлен параметр false, настройки лог-группы игнорируются.
+                logGroupId:
+                    type: string
+                    description: |-
+                        Идентификатор лог-группы.
+                         Опциональное поле.
+                         Если не указывается, используется значение по умолчанию.
+            description: Логирование событий компонентов кластера.
+        MonitoringService:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: |-
+                        Включение/выключение мониторинга компонентов кластера.
+                         Возможные значения: true — мониторинг включен, false — мониторинг выключен.
+                         По умолчанию мониторинг включен.
+            description: Мониторинг компонентов кластера.
+        NetworkConfigurationRequest:
+            type: object
+            properties:
+                servicesSubnetCidr:
+                    type: string
+                    description: Адрес подсети сервисов в формате RFC1918.
+                podsSubnetCidr:
+                    type: string
+                    description: Адрес сети подов в формате RFC1918.
+                nodesSubnetCidr:
+                    type: string
+                    description: |-
+                        Адрес подсети узлов в формате RFC1918.
+                         Если указать это значение, то сеть будет создана автоматически.
+                nodesSubnetId:
+                    type: string
+                    description: Идентификатор существующей подсети узлов.
+                kubeApiInternet:
+                    type: boolean
+                    description: Флаг публикации kube-apiserver в интернет.
+                vpcId:
+                    type: string
+                    description: Идентификатор VPC.
+                networkPlugin:
+                    allOf:
+                        - $ref: '#/components/schemas/NetworkPluginRequest'
+                    description: Плагин CNI для обеспечения сетевой связности и сетевых политик в кластере.
+            description: Описание сетевой инфраструктуры кластера.
+        NetworkConfigurationResponse:
+            type: object
+            properties:
+                servicesSubnetCidr:
+                    type: string
+                    description: Адрес подсети сервисов.
+                podsSubnetCidr:
+                    type: string
+                    description: Адрес подсети подов.
+                nodesSubnetCidr:
+                    type: string
+                    description: Адрес подсети узлов плоскости управления.
+                kubeApiInternet:
+                    type: boolean
+                    description: Флаг публикации kube-apiserver в интернет.
+                cpEndpoints:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ControlPlaneEndpoint'
+                    description: Адреса плоскости управления.
+                vpcId:
+                    type: string
+                    description: Идентификатор VPC.
+                nodesSubnetId:
+                    type: string
+                    description: Идентификатор подсети узлов плоскости управления.
+            description: Описание актуальной сетевой инфраструктуры кластера.
+        NetworkPluginRequest:
+            type: object
+            properties:
+                cilium:
+                    allOf:
+                        - $ref: '#/components/schemas/Cilium'
+                    description: Настройки для использования Cilium в качестве CNI-плагина.
+                calico:
+                    allOf:
+                        - $ref: '#/components/schemas/Calico'
+                    description: Настройки для использования Calico в качестве CNI-плагина.
+            description: Конфигурация CNI-плагина при создании кластера.
+        Node:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: Идентификатор узла.
+                hostname:
+                    type: string
+                    description: Название узла.
+                createdAt:
+                    type: string
+                    description: Время создания узла.
+                    format: date-time
+                ipAddress:
+                    type: string
+                    description: IP-адрес узла.
+                state:
+                    enum:
+                        - OBJECT_STATE_UNSPECIFIED
+                        - OBJECT_STATE_PENDING
+                        - OBJECT_STATE_PROVISIONING
+                        - OBJECT_STATE_RUNNING
+                        - OBJECT_STATE_PAUSING
+                        - OBJECT_STATE_PAUSED
+                        - OBJECT_STATE_RESUMING
+                        - OBJECT_STATE_UPDATING
+                        - OBJECT_STATE_DELETING
+                        - OBJECT_STATE_ERROR
+                        - OBJECT_STATE_SCALING_UP
+                        - OBJECT_STATE_SCALING_DOWN
+                        - OBJECT_STATE_STOPPING
+                        - OBJECT_STATE_STOPPED
+                        - OBJECT_STATE_SUSPENDING
+                        - OBJECT_STATE_SUSPENDED
+                        - OBJECT_STATE_UPGRADING
+                    type: string
+                    description: Состояние узла.
+                    format: enum
+                vmName:
+                    type: string
+                    description: Название виртуальной машины.
+                updateAt:
+                    type: string
+                    description: Время обновления узла.
+                    format: date-time
+            description: Информация об узле в группе.
+        NodePool:
+            type: object
+            properties:
+                nodePoolId:
+                    type: string
+                    description: Идентификатор группы узлов.
+                displayName:
+                    type: string
+                    description: Название группы узлов.
+                clusterId:
+                    type: string
+                    description: Идентификатор кластера, в котором развернута группа узлов.
+                version:
+                    type: string
+                    description: Версия Kubernetes, которая используется на узлах группы.
+                hardwareCompute:
+                    allOf:
+                        - $ref: '#/components/schemas/HardwareCompute'
+                    description: Описание инфраструктуры узлов группы.
+                scalePolicy:
+                    allOf:
+                        - $ref: '#/components/schemas/ScalePolicy'
+                    description: Политика масштабирования группы узлов в кластере.
+                taints:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Taint'
+                    description: Список ограничений (taints), применяемых к узлам в группе.
+                createdBy:
+                    type: string
+                    description: Идентификатор пользователя, создавшего группу узлов.
+                createdAt:
+                    type: string
+                    description: Время создания группы узлов.
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: Время последнего обновления группы узлов.
+                    format: date-time
+                updatedBy:
+                    type: string
+                    description: Идентификатор пользователя, обновившего группу узлов.
+                nodesNetworkConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/NodesNetworkConfigurationResponse'
+                    description: Конфигурация сети нод.
+                labels:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Набор меток (labels), применяемых к узлам в группе.
+                state:
+                    enum:
+                        - OBJECT_STATE_UNSPECIFIED
+                        - OBJECT_STATE_PENDING
+                        - OBJECT_STATE_PROVISIONING
+                        - OBJECT_STATE_RUNNING
+                        - OBJECT_STATE_PAUSING
+                        - OBJECT_STATE_PAUSED
+                        - OBJECT_STATE_RESUMING
+                        - OBJECT_STATE_UPDATING
+                        - OBJECT_STATE_DELETING
+                        - OBJECT_STATE_ERROR
+                        - OBJECT_STATE_SCALING_UP
+                        - OBJECT_STATE_SCALING_DOWN
+                        - OBJECT_STATE_STOPPING
+                        - OBJECT_STATE_STOPPED
+                        - OBJECT_STATE_SUSPENDING
+                        - OBJECT_STATE_SUSPENDED
+                        - OBJECT_STATE_UPGRADING
+                    type: string
+                    description: Состояние группы узлов
+                    format: enum
+                updateConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/NodePoolUpdateConfiguration'
+                    description: Политика обновления группы узлов.
+                versionUpgrade:
+                    allOf:
+                        - $ref: '#/components/schemas/VersionUpgrade'
+                    description: Информация о доступных версиях Kubernetes для обновления группы узлов.
+                remoteAccess:
+                    allOf:
+                        - $ref: '#/components/schemas/RemoteAccess'
+                    description: Конфигурация удаленного доступа к виртуальной машине в группе.
+                nodesDesired:
+                    type: integer
+                    description: Запрашиваемое количество узлов.
+                    format: uint32
+                nodesReady:
+                    type: integer
+                    description: Количество готовых к работе узлов.
+                    format: uint32
+                zone:
+                    type: string
+                    description: Зона доступности, в которой размещены узлы группы.
+                upgradeInfo:
+                    allOf:
+                        - $ref: '#/components/schemas/NodePool_UpgradeInfo'
+                    description: Информация о процессе обновления группы узлов.
+            description: Информация по группе узлов
+        NodePoolData:
+            type: object
+            properties:
+                displayName:
+                    type: string
+                    description: Название группы узлов.
+                scalePolicy:
+                    allOf:
+                        - $ref: '#/components/schemas/ScalePolicy'
+                    description: Политика масштабирования группы узлов.
+                updateConfiguration:
+                    allOf:
+                        - $ref: '#/components/schemas/NodePoolUpdateConfiguration'
+                    description: Политика обновления группы узлов.
+            description: Информацию о группе узлов, которую необходимо изменить.
+        NodePoolUpdateConfiguration:
+            type: object
+            properties:
+                strategy:
+                    enum:
+                        - NODE_POOL_UPDATE_STRATEGY_UNSPECIFIED
+                        - NODE_POOL_UPDATE_STRATEGY_ROLLING_UPDATE
+                    type: string
+                    description: Стратегия обновления.
+                    format: enum
+                rollingUpdatePolicy:
+                    allOf:
+                        - $ref: '#/components/schemas/RollingUpdatePolicy'
+                    description: Параметры политики обновления RollingUpdate.
+            description: Конфигурация обновления группы узлов.
+        NodePool_UpgradeInfo:
+            type: object
+            properties:
+                desiredVersion:
+                    type: string
+                    description: |-
+                        Версия Kubernetes, на которую выполняется обновление.
+                         Если версия не указана, то выполняется обновление системных компонентов
+                         платформы Managed Kubernetes в группе узлов без обновления версии Kubernetes.
+                phase:
+                    enum:
+                        - PHASE_UNSPECIFIED
+                        - PHASE_RUNNING
+                        - PHASE_CANCELLED
+                        - PHASE_ROLLBACK
+                    type: string
+                    description: Стадия обновления.
+                    format: enum
+            description: Данные об обновлении.
+        NodePoolsInfo:
+            type: object
+            properties:
+                count:
+                    type: integer
+                    description: Количество групп узлов.
+                    format: uint32
+                cpu:
+                    type: integer
+                    description: Количество ядер процессора виртуальных машин.
+                    format: uint32
+                ram:
+                    type: integer
+                    description: Оперативная память виртуальных машин в ГБ.
+                    format: uint32
+                diskSize:
+                    type: integer
+                    description: Размер подключаемых дисков в ГБ.
+                    format: uint32
+            description: Информация по группам узлов.
+        NodesNetworkConfigurationRequest:
+            type: object
+            properties:
+                nodesSubnetCidr:
+                    type: string
+                    description: |-
+                        Адрес сети узлов в формате RFC1918.
+                         Если указать это значение, то сеть будет создана автоматически.
+                nodesSubnetId:
+                    type: string
+                    description: Идентификатор существующей сети узлов.
+                securityGroupId:
+                    type: string
+                    description: |-
+                        Идентификатор группы безопасности.
+                         Опциональное поле.
+            description: Описание желаемой сетевой инфраструктуры группы узлов.
+        NodesNetworkConfigurationResponse:
+            type: object
+            properties:
+                nodesSubnetCidr:
+                    type: string
+                    description: Адрес сети узлов группы.
+                nodesSubnetId:
+                    type: string
+                    description: Идентификатор сети узлов группы.
+                securityGroupId:
+                    type: string
+                    description: |-
+                        Идентификатор группы безопасности.
+                         Опциональное поле.
+            description: Описание актуальной сетевой инфраструктуры группы узлов.
+        PersistentDiskCSIDriver:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: |-
+                        Опция подключения плагина
+                         По умолчанию плагин включен.
+            description: "Конфигурация плагина CSI Driver для работы \n с постоянными томами для хранения данных."
+        RemoteAccess:
+            type: object
+            properties:
+                sshKeyId:
+                    type: string
+                    description: Идентификатор SSH ключа из сервиса "SSH-ключи".
+                username:
+                    type: string
+                    description: Имя пользователя.
+            description: Конфигурация удаленного доступа к виртуальной машине в группе.
+        ResumeClusterResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче.
+            description: Ответ с информацией о задаче на возобновление работы кластера.
+        RollingUpdatePolicy:
+            type: object
+            properties:
+                maxSurge:
+                    type: integer
+                    description: |-
+                        Максимальное количество дополнительных узлов в процентах от общего числа узлов в группе,
+                         которые могут быть добавлены в группу временно при обновлении.
+                    format: uint32
+                maxUnavailable:
+                    type: integer
+                    description: |-
+                        Максимальное количество одновременно недоступных узлов
+                         при обновлении в процентах от общего числа узлов в группе.
+                    format: uint32
+            description: |-
+                Параметры политики обновления RollingUpdate.
+                 (maxUnavailable + maxSurge) определяет уровень параллелизма (количество обновляемых узлов одновременно).
+        ScalePolicy:
+            type: object
+            properties:
+                fixedScale:
+                    allOf:
+                        - $ref: '#/components/schemas/ScalePolicy_FixedScale'
+                    description: Фиксированное число узлов.
+                autoScale:
+                    allOf:
+                        - $ref: '#/components/schemas/ScalePolicy_AutoScale'
+                    description: Автоматически масштабируемое число узлов.
+            description: Политика масштабирования группы узлов в кластере.
+        ScalePolicy_AutoScale:
+            type: object
+            properties:
+                minCount:
+                    type: integer
+                    description: Минимальное количество узлов в группе узлов.
+                    format: uint32
+                maxCount:
+                    type: integer
+                    description: Максимальное количество узлов в группе узлов.
+                    format: uint32
+                initialCount:
+                    type: integer
+                    description: |-
+                        Начальное количество узлов.
+                         Обязателен при создании группы узлов.
+                         При редактировании группы узлов является опциональным.
+                    format: uint32
+            description: Группа узлов с поддержкой автоматического масштабирования.
+        ScalePolicy_FixedScale:
+            type: object
+            properties:
+                count:
+                    type: integer
+                    description: Количество узлов в группе.
+                    format: uint32
+            description: Группа узлов с фиксированным числом узлов.
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        StopClusterResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче.
+            description: Ответ с информацией о задаче на приостановку кластера.
+        Taint:
+            type: object
+            properties:
+                key:
+                    type: string
+                    description: Ключ.
+                value:
+                    type: string
+                    description: Значение.
+                effect:
+                    enum:
+                        - EFFECT_UNSPECIFIED
+                        - EFFECT_NO_SCHEDULE
+                        - EFFECT_PREFER_NO_SCHEDULE
+                        - EFFECT_NO_EXECUTE
+                    type: string
+                    description: Применяемый эффект.
+                    format: enum
+            description: Ограничение, накладываемое на узел.
+        Task:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: Идентификатор задачи.
+                status:
+                    enum:
+                        - TASK_STATUS_UNSPECIFIED
+                        - TASK_STATUS_PENDING
+                        - TASK_STATUS_IN_PROGRESS
+                        - TASK_STATUS_COMPLETED
+                        - TASK_STATUS_FAILED
+                        - TASK_STATUS_CANCELLED
+                    type: string
+                    description: Статус задачи.
+                    format: enum
+                eventName:
+                    enum:
+                        - TASK_EVENT_UNSPECIFIED
+                        - TASK_EVENT_CREATE_CLUSTER
+                        - TASK_EVENT_DELETE_CLUSTER
+                        - TASK_EVENT_CREATE_NODE_POOL
+                        - TASK_EVENT_DELETE_NODE_POOL
+                        - TASK_EVENT_CREATE_NAMESPACE
+                        - TASK_EVENT_CREATE_ACCESS_KEY
+                        - TASK_EVENT_ACTIVATE_PRODUCT_INSTANCE
+                        - TASK_EVENT_SUSPEND_PRODUCT_INSTANCE
+                        - TASK_EVENT_RESUME_PRODUCT_INSTANCE
+                        - TASK_EVENT_DEACTIVATE_PRODUCT_INSTANCE
+                        - TASK_EVENT_CREATE_VOLUME
+                        - TASK_EVENT_DELETE_VOLUME
+                        - TASK_EVENT_EDIT_CLUSTER
+                        - TASK_EVENT_EDIT_NODE_POOL
+                        - TASK_EVENT_SUSPEND_CLUSTER
+                        - TASK_EVENT_RESUME_CLUSTER
+                        - TASK_EVENT_UPGRADE_CLUSTER
+                        - TASK_EVENT_UPGRADE_NODE_POOL
+                    type: string
+                    description: Тип события.
+                    format: enum
+                createdAt:
+                    type: string
+                    description: Время создания задачи.
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: Время последнего обновления задачи.
+                    format: date-time
+                taskObjectId:
+                    type: string
+                    description: Идентификатор объекта задачи.
+                taskObjectType:
+                    enum:
+                        - OBJECT_TYPE_UNSPECIFIED
+                        - OBJECT_TYPE_PRODUCT_INSTANCE
+                        - OBJECT_TYPE_CLUSTER
+                        - OBJECT_TYPE_NODEPOOL
+                        - OBJECT_TYPE_VOLUME
+                        - OBJECT_TYPE_NAMESPACE
+                        - OBJECT_TYPE_SECRET
+                    type: string
+                    description: Тип объекта задачи.
+                    format: enum
+                metadata:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: Метаданные задачи.
+                error:
+                    allOf:
+                        - $ref: '#/components/schemas/Status'
+                    description: Ошибка, если задача завершилась с ошибкой.
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: Данные, если задача завершилась успешно.
+                userId:
+                    type: string
+                    description: Идентификатор пользователя.
+            description: Описание возвращаемой операции
+        UpdateClusterAddonRequest:
+            type: object
+            properties:
+                clusterId:
+                    type: string
+                    description: Идентификатор кластера.
+                addonName:
+                    type: string
+                    description: Название плагина, например cilium.
+                addonVersion:
+                    type: string
+                    description: Версия плагина в формате SemVer, на которую нужно обновиться.
+                addonConfiguration:
+                    type: string
+                    description: |-
+                        Пользовательская конфигурация плагина в JSON формате согласно схеме.
+                         Поддерживает переменные автоподстановки, заключенные в символы {{ и }}:
+                         {{clusterID}} — уникальный идентификатор кластера;
+                         {{clusterName}} — программное имя кластера;
+                         {{productInstanceID}} — идентификатор экземпляра продукта;
+                         {{nodeCIDR}} — CIDR сети узлов;
+                         {{serviceCIDR}} — CIDR сервисной сети.
+
+                         Если поле не указано, то переиспользуется последняя конфигурация.
+                resolveMode:
+                    enum:
+                        - RESOLVE_CONFLICTS_MODE_UNSPECIFIED
+                        - RESOLVE_CONFLICTS_MODE_NONE
+                        - RESOLVE_CONFLICTS_MODE_OVERWRITE
+                        - RESOLVE_CONFLICTS_MODE_PRESERVE
+                    type: string
+                    description: Режим разрешения конфликтов.
+                    format: enum
+            description: Контракт для запроса на обновление существующего плагина на новую версию или применение новой конфигурации.
+        UpdateClusterAddonResponse:
+            type: object
+            properties:
+                action:
+                    allOf:
+                        - $ref: '#/components/schemas/AddonAction'
+                    description: Информация об обновлении плагина.
+            description: Контракт для ответа на обновление существующего плагина на новую версию или применение новой конфигурации.
+        UpgradeControlPlaneResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на обновление плоскости управления кластера.
+            description: Ответ на обновление плоскости управления кластера.
+        UpgradeNodePoolResponse:
+            type: object
+            properties:
+                task:
+                    allOf:
+                        - $ref: '#/components/schemas/Task'
+                    description: Информация о задаче на обновление группы узлов кластера.
+            description: Ответ на обновление группы узлов кластера.
+        VersionUpgrade:
+            type: object
+            properties:
+                availableVersions:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Список доступных версий Kubernetes для обновления кластера.
+                         Версии отсортированы в порядке убывания,
+                         начиная с самой старшей версии.
+                upgradeAvailable:
+                    type: boolean
+                    description: Флаг доступности новой версии Kubernetes.
+            description: Информация о доступных версиях Kubernetes для обновления кластера.
+    securitySchemes:
+        api_key:
+            type: apiKey
+            description: IAM API Key auth
+            name: Authorization
+            in: header
+security:
+    - api_key: []
+tags:
+    - name: AddonService
+      description: Сервис по работе с плагинами.
+    - name: AvailabilityService
+      description: Сервис для получения актуальной информации по зонам и шаблонам конфигураций виртуальных машин.
+    - name: BillingService
+      description: Сервис получения биллинговой информации.
+    - name: ClusterAddonService
+      description: Сервис управления плагинами в кластере.
+    - name: ClusterService
+      description: Сервис по работе с кластерами.
+    - name: MetaService
+      description: Сервис для получения технической информации Managed Kubernetes.
+    - name: NodePoolService
+      description: Сервис по работе с группами узлов.
+    - name: QuotasService
+      description: Сервис для получения квот и используемых ресурсов.
+    - name: TaskService
+      description: Сервис по работе с задачами.
